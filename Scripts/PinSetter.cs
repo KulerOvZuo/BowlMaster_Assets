@@ -17,10 +17,6 @@ public class PinSetter : MonoBehaviour {
     public Text text;  
 
     private int pinsStanding = 0;
-    // Use this for self-initialization
-	void Awake() {
-	
-	}
 	
 	// Use this for initialization
 	void Start () {
@@ -35,10 +31,9 @@ public class PinSetter : MonoBehaviour {
         text.text = pinsStanding.ToString();
 
         if(ballEnteredBox){
-            CheckStanding();
+            UpdateStandingCountAndSettle();
         }
 	}
-
 
     public int CountStandingPins(){
         int standing = 0;
@@ -62,7 +57,7 @@ public class PinSetter : MonoBehaviour {
         if(other.gameObject.GetComponentInParent<Pin>())
             Destroy(other.gameObject.transform.parent.gameObject);
     }
-    void CheckStanding(){
+    void UpdateStandingCountAndSettle(){
         int currentStanding = CountStandingPins();
         if(currentStanding != lastStandingCount){
             lastChangeTime = Time.time;
@@ -98,7 +93,7 @@ public class PinSetter : MonoBehaviour {
         }
     }
     public void RenewPins(){
-        GameObject lastPins = GameObject.Find("PinsOrigin");
+        GameObject lastPins = GameObject.FindGameObjectWithTag("Pins");
         if(lastPins)
             Destroy(lastPins);
         pinsOrigin = Instantiate(pinsPrefab,new Vector3(0,0,1859),Quaternion.identity) as GameObject;

@@ -6,10 +6,6 @@ public class CameraControl : MonoBehaviour {
     private GameObject ball;
 
     private Vector3 offset;
-    // Use this for self-initialization
-	void Awake() {
-	
-	}
 	
 	// Use this for initialization
 	void Start () {

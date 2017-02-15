@@ -16,15 +16,7 @@ public class Ball : MonoBehaviour {
         thisRigidbody.useGravity = false;
         startingPosition = transform.position;
 	}
-	
-	// Use this for initialization
-	void Start () {
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
     public void Launch(Vector3 velocity){
         if(!isLaunched){
             thisRigidbody.velocity = velocity;
