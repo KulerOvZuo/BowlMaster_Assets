@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class ScoreMaster {	
+public static class ScoreMaster {	
 
     public static List<int> ScoreCumulative(List<int> rolls){
         List<int> cumulativeScore = new List<int> ();
@@ -20,7 +20,7 @@ public class ScoreMaster {
         int length = rolls.Count;
         int[] frameArray = rolls.ToArray();
         for(int i=0; i<length; i++){
-            if(frameList.Count == 10) //end
+            if(frameList.Count == 10) //to prevent 11th frame
                 break;
             int value = frameArray[i];
             if(value == 10){//strike - search next 2
@@ -28,8 +28,8 @@ public class ScoreMaster {
                     value += frameArray[i+1] + frameArray[i+2];
                     frameList.Add(value);
                 }
-                //no i++ - next empty
-            } else { 
+                //no i++ - next is empty
+            } else { //not strike in first
                 if(i+1 < length){ //second in frame exists
                     value += frameArray[i+1];
                     if(value < 10){//not spare - end
