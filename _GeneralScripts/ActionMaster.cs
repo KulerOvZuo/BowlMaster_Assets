@@ -9,7 +9,7 @@ public class ActionMaster {
     private int[] bowls = new int[21];
     private int bowl = 1;
 
-    public Action Bowl(int pins){
+    private Action Bowl(int pins){
         if(pins<0 || pins>10) throw new UnityException ("Wrong number of pins");
 
         bowls[bowl-1] = pins;
