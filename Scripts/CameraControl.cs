@@ -16,7 +16,7 @@ public class CameraControl : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         float zValue = ball.transform.position.z + offset.z;
-        if(zValue < 1700)
+        if(zValue < 1600)
         {   transform.position = new Vector3(Mathf.Clamp(ball.transform.position.x,-40,40),transform.position.y, zValue);
             }	
 	}

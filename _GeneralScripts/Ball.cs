@@ -8,7 +8,8 @@ public class Ball : MonoBehaviour {
     private Rigidbody thisRigidbody;
     private AudioSource audioSource;
 
-    private bool isLaunched = false;
+    [HideInInspector]
+    public bool isLaunched = false;
     // Use this for self-initialization
 	void Awake() {
         thisRigidbody = GetComponent<Rigidbody>();
@@ -33,8 +34,9 @@ public class Ball : MonoBehaviour {
     }
     public void Reinstantiate(){
         thisRigidbody.velocity = thisRigidbody.angularVelocity = Vector3.zero;
-        isLaunched = false;
+        //isLaunched = false;
         thisRigidbody.useGravity = false;
         transform.position = startingPosition;
+        transform.rotation = Quaternion.Euler(0f,0f,0f);
     }
 }

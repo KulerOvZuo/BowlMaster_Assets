@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ActionMaster {	
     
@@ -56,10 +57,17 @@ public class ActionMaster {
 
         throw new UnityException ("Not sure what action to return!");
     }
-
     private bool Bowl21Awarded(){
-        //arrays start caounting at 1
-        //Debug.Log(bowls[19-1] + " " + bowls[20-1]);
         return ((bowls[19-1] + bowls[20-1]) >= 10);
+    }
+
+    public static Action NextAction (List<int> pinFalls){
+        ActionMaster am = new ActionMaster();  
+        Action currentAction = new Action();
+
+        foreach(int pinFall in pinFalls){
+            currentAction = am.Bowl(pinFall);
+        }
+        return currentAction;
     }
 }

@@ -6,7 +6,8 @@ public class PinSetter : MonoBehaviour {
 
     private int lastStandingCount = -1;
     private float lastChangeTime;
-    private bool ballEnteredBox = false;
+    [HideInInspector]
+    public bool ballOutofPlay = false;
     public float dostanceToRaise = 40f;
 
     public GameObject pinsPrefab;
@@ -17,12 +18,15 @@ public class PinSetter : MonoBehaviour {
     public Text text;  
 
     private int pinsStanding = 0;
-	
+	private int lastSettledCount = 10;
+    private ActionMaster actionMaster = new ActionMaster();
+    private Animator animator;
 	// Use this for initialization
 	void Start () {
         pinsOrigin = GameObject.Find("PinsOrigin");
         pinsStanding = CountStandingPins();
         ball = GameObject.Find("Ball").GetComponent<Ball>();
+        animator = GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
@@ -30,7 +34,8 @@ public class PinSetter : MonoBehaviour {
         pinsStanding = CountStandingPins();
         text.text = pinsStanding.ToString();
 
-        if(ballEnteredBox){
+        if(ballOutofPlay){
+            text.color = Color.red;
             UpdateStandingCountAndSettle();
         }
 	}
@@ -47,12 +52,6 @@ public class PinSetter : MonoBehaviour {
         return pinsStanding;
     }
 
-    void OnTriggerEnter(Collider other){
-        if(other.gameObject.GetComponent<Ball>()){
-            ballEnteredBox = true;
-            text.color = Color.red;   
-        }    
-    }
     void OnTriggerExit(Collider other){
         if(other.gameObject.GetComponentInParent<Pin>())
             Destroy(other.gameObject.transform.parent.gameObject);
@@ -70,8 +69,18 @@ public class PinSetter : MonoBehaviour {
         }
     }
     void PinsHaveSetteled(){
+        int pinFall = lastSettledCount - CountStandingPins();
+        lastSettledCount = lastSettledCount - pinFall;
+        ActionMaster.Action action = actionMaster.Bowl(pinFall);
+        switch(action){
+            case ActionMaster.Action.Tidy: animator.SetTrigger("tidy"); break;
+            case ActionMaster.Action.Reset: animator.SetTrigger("reset"); break;
+            case ActionMaster.Action.EndTurn: animator.SetTrigger("reset"); break;
+            case ActionMaster.Action.EndGame: animator.SetTrigger("reset"); break;
+        }
+
         ball.Reinstantiate();
-        ballEnteredBox = false;
+        ballOutofPlay = false;
         lastStandingCount = -1;
         text.color = Color.green;
     }
@@ -81,6 +90,7 @@ public class PinSetter : MonoBehaviour {
             if(child.IsStanding()){
                 child.gameObject.transform.position += new Vector3(0,dostanceToRaise,0);
                 child.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+                child.transform.rotation = Quaternion.Euler(0f,0f,0f);
             }
         }
     }
@@ -91,12 +101,14 @@ public class PinSetter : MonoBehaviour {
                 child.gameObject.transform.position -= new Vector3(0,dostanceToRaise,0);
             }
         }
+        ball.isLaunched = false;
     }
     public void RenewPins(){
         GameObject lastPins = GameObject.FindGameObjectWithTag("Pins");
         if(lastPins)
             Destroy(lastPins);
         pinsOrigin = Instantiate(pinsPrefab,new Vector3(0,0,1859),Quaternion.identity) as GameObject;
+        lastSettledCount = 10;
         RaisePins();
     }
 
