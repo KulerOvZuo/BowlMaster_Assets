@@ -64,7 +64,6 @@ public class PinCounter : MonoBehaviour {
     void PinsHaveSetteled(){
         int pinFall = lastSettledCount - CountStandingPins();
         lastSettledCount = lastSettledCount - pinFall;
-
         GM.Bowl(pinFall);
         ballOutofPlay = false;
         lastStandingCount = -1;
